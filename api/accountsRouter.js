@@ -15,6 +15,10 @@ router.get('/', async (req, res) => {
 //get account --> single account by id
 router.get('/:id', async (req, res) => {
   try {
+    const accountByID = await db('accounts')
+      .where('id', req.params.id)
+      .first();
+    res.json(accountByID);
   } catch (error) {
     res.status(500).json({ message: 'Sorry, no single account returned from server', error });
   }
