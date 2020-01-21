@@ -48,6 +48,11 @@ router.post('/', async (req, res) => {
 //delete --> delete account by id
 router.delete('/:id', async (req, res) => {
   try {
+    const deleteAccount = await db('accounts')
+      .where('id', req.params.id)
+      .del();
+
+    res.status(204).end();
   } catch (error) {
     res.status(500).json({ message: 'Sorry, no accounted deleted from the server', error });
   }
@@ -56,6 +61,21 @@ router.delete('/:id', async (req, res) => {
 //put --> updated account by id
 router.put('/:id', async (req, res) => {
   try {
+    const updatedAccount = {
+      name: req.body.name,
+      budget: req.body.budget
+    };
+
+    await db('accounts')
+      .where('id', req.params.id)
+      .update(updatedAccount);
+
+    //response in postman
+    res.json(
+      await db('accounts')
+        .where('id', req.params.id)
+        .first()
+    );
   } catch (error) {
     res.status(500).json({ message: 'Sorry, account not updated on the server', error });
   }
