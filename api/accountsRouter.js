@@ -27,6 +27,19 @@ router.get('/:id', async (req, res) => {
 //post --> create new account
 router.post('/', async (req, res) => {
   try {
+    const newAccount = {
+      name: req.body.name,
+      budget: req.body.budget
+    };
+    //Creates new account
+    const [id] = await db('accounts').insert(newAccount);
+
+    //view response in postman
+    res.json(
+      await db('accounts')
+        .where('id', id)
+        .first()
+    );
   } catch (error) {
     res.status(500).json({ message: 'Sorry, no account created on the server', error });
   }
